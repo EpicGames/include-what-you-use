@@ -123,6 +123,8 @@ static void PrintHelp(const char* extra_msg) {
          "   --verbose=<level>: the higher the level, the more output.\n"
          "   --quoted_includes_first: when sorting includes, place quoted\n"
          "        ones first.\n"
+         "   --delayed_template_parsing: delay parsing of templates.\n"
+         "        By default iwyu instantiate templates up front\n"
          "   --cxx17ns: use C++17 nested namespaces when suggesting additions\n"
          "        of forward declarations.\n"
          "   --error[=N]: exit with N (default: 1) for iwyu violations\n"
@@ -221,6 +223,7 @@ CommandlineFlags::CommandlineFlags()
       comments_with_namespace(false),
       no_fwd_decls(false),
       quoted_includes_first(false),
+      delayed_template_parsing(false),
       cxx17ns(false),
       exit_code_error(EXIT_SUCCESS),
       exit_code_always(EXIT_SUCCESS),
@@ -245,6 +248,7 @@ int CommandlineFlags::ParseArgv(int argc, char** argv) {
     {"update_comments", no_argument, nullptr, 'u'},
     {"no_fwd_decls", no_argument, nullptr, 'f'},
     {"quoted_includes_first", no_argument, nullptr, 'q' },
+    {"delayed_template_parsing", no_argument, nullptr, 'D' },
     {"cxx17ns", no_argument, nullptr, 'C'},
     {"error", optional_argument, nullptr, 'e'},
     {"error_always", optional_argument, nullptr, 'a'},
@@ -295,6 +299,7 @@ int CommandlineFlags::ParseArgv(int argc, char** argv) {
         CHECK_((max_line_length >= 0) && "Max line length must be positive");
         break;
       case 'q': quoted_includes_first = true; break;
+      case 'D': delayed_template_parsing = true; break;
       case 'C': cxx17ns = true; break;
       case 'e':
         if (!optarg) {

@@ -106,6 +106,7 @@ struct CommandlineFlags {
   bool comments_with_namespace; // Show namespace in 'why' comments.
   bool no_fwd_decls;  // Disable forward declarations.
   bool quoted_includes_first; // Place quoted includes first in sort order.
+  bool delayed_template_parsing;
   bool cxx17ns; // -C: C++17 nested namespace syntax
   int exit_code_error;   // Exit with this code for iwyu violations.
   int exit_code_always;  // Always exit with this exit code.

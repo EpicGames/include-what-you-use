@@ -3936,7 +3936,9 @@ class IwyuAstConsumer
     // But we need to be non-lazy: IWYU depends on analyzing what future
     // code *may* call in a class, not what current code *does*.  So we
     // force all the lazy evaluation to happen here.
-    InstantiateImplicitMethods(sema, tu_decl);
+    if (!GlobalFlags().delayed_template_parsing) {
+      InstantiateImplicitMethods(sema, tu_decl);
+    }
 
     // Run IWYU analysis.
     TraverseDecl(tu_decl);
@@ -4051,7 +4053,9 @@ class IwyuAstConsumer
       if (auto* ctor = dyn_cast<CXXConstructorDecl>(method)) {
         sema.DefineImplicitDefaultConstructor(loc, ctor);
       } else if (auto* dtor = dyn_cast<CXXDestructorDecl>(method)) {
-        sema.DefineImplicitDestructor(loc, dtor);
+        if (!GlobalFlags().delayed_template_parsing) {
+          sema.DefineImplicitDestructor(loc, dtor);
+        }
       }
     }
 
