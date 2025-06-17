@@ -4755,6 +4755,10 @@ class IwyuAction : public ASTFrontendAction {
   const ToolChain& toolchain;
 };
 
+void ExpandArgv(int argc, const char **argv,
+                llvm::SmallVectorImpl<const char*> &ArgVector,
+                set<string> &SavedStrings);
+
 } // namespace include_what_you_use
 
 int main(int argc, char **argv) {
@@ -4771,10 +4775,19 @@ int main(int argc, char **argv) {
   llvm::InitializeAllTargetMCs();
   llvm::InitializeAllAsmParsers();
 
+  // Expand out any response files passed on the command line. Note we do it here since we want to be able to have -Xiwyu inside the response file
+  std::set<std::string> SavedStrings;
+  llvm::SmallVector<const char*, 256> args;
+  const char **argv2 = (const char**)argv;
+  include_what_you_use::ExpandArgv(argc, argv2, args, SavedStrings);
+
   // The command line should look like
   //   path/to/iwyu -Xiwyu --verbose=4 [-Xiwyu --other_iwyu_flag]... \
   //       CLANG_FLAGS... foo.cc
-  OptionsParser options_parser(argc, argv);
+  OptionsParser options_parser(args.size(), (char**)args.data());
+
+
+
   if (!ExecuteAction(options_parser.clang_argc(), options_parser.clang_argv(),
                      [](const ToolChain& toolchain) {
                        return std::make_unique<IwyuAction>(toolchain);

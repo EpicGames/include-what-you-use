@@ -156,7 +156,7 @@ void ExpandArgsFromBuf(const char *Arg,
     CurArg.push_back(*P);
   }
 }
-
+}
 void ExpandArgv(int argc, const char **argv,
                 SmallVectorImpl<const char*> &ArgVector,
                 set<std::string> &SavedStrings) {
@@ -170,7 +170,7 @@ void ExpandArgv(int argc, const char **argv,
     ExpandArgsFromBuf(Arg, ArgVector, SavedStrings);
   }
 }
-
+namespace {
 bool HasPreprocessOnlyArgs(ArrayRef<const char*> args) {
   auto is_preprocess_only = [](StringRef arg) {
     // Handle GCC spelling.
